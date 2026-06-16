@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav class="navbar">
+      <a class="logo">Expense Tacker</a>
+      <a class="{% if mode == 'add' %}active{% endif %}"
+       href="{{url_for('home',mode='add')}}">Home</a>
+      <a class="{% if mode == 'view' %}active{% endif %}"
+       href="{{url_for('expense',mode='view')}}">View Expenses</a>
+      <a class="{% if mode == 'delete_confirm' %}active{% endif %}"
+       href="{{url_for('expense',mode='delete_confirm')}}">Delete Expense</a>
+      <a class="{% if mode == 'update' %}active{% endif %}"
+       href="{{url_for('expense',mode='update')}}">Update Expense</a>
+    </nav>
+</body>
+</html>

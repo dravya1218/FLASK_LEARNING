@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+</head>
+<body>
+    <header>
+            {% include 'navbar.html' %}
+            {% if mode == 'view' %}
+                <h1 class="page-title">View Expenses</h1>
+            {% elif mode=='delete' %}
+                <h1 class="page-title">Delete Expense</h1>
+            {% elif mode=='update' %}
+                <h1 class="page-title">Update Expense</h1>
+            {% else %}
+            {% endif %}
+    </header>
+    <h2 class="section-title">Filter Form</h2>
+    <form class="filter_form" method="GET" action="{{ url_for('expense') }}">
+    <input type="text" name="name" placeholder="Search by name">
+
+    <input type="text" name="category" placeholder="Category">
+
+    <input type="number" name="min_amount" placeholder="Min amount">
+
+    <input type="number" name="max_amount" placeholder="Max amount">
+
+    <input type="hidden" name="mode" value="{{ mode }}">
+
+    <button type="submit">Filter</button>
+    </form>
+    
+    {%if mode=="view"%}
+        <h2 class="section-title">Total Summary</h2>
+        <table class="total_summary" border="1">
+            <tr>
+                <th>COUNT</th>
+                <th>TOTAL EXPENSE</th>
+            </tr>
+            <tr>
+                <td>{{result["count"]}}</td>
+                <td>{{result["total"]}}</td>
+            </tr>
+        </table>
+        <h2 class="section-title">Category Summary</h2>
+        <table class="category_summary" border="1">
+            <tr>
+                <th>CATEGORY</th>
+                <th>TOTAL</th>
+                <th>COUNT</th>
+            </tr>
+            {%for category in categorys %}
+            <tr>
+                <td>{{category["category"]}}</td>
+                <td>{{category["total"]}}</td>
+                <td>{{category["count"]}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+    {% if not expenses %}
+        <h2>NO EXPENSE FOUND</h2>
+    {% endif %}
+    <h2 class="section-title">All Expenses</h2>
+    <table class="main_table" border="3">
+        <tr>
+            <th>ID</th>
+            <th>NAME</th>
+            <th>AMOUNT</th>
+            <th>CATEGORY</th>
+            <th>ACTION</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{expense["id"]}}</td>
+            <td>{{expense["name"]}}</td>
+            <td>{{expense["amount"]}}</td>
+            <td>{{expense["category"]}}</td>
+            <td>
+                {% if mode=="update" %}
+                <a class="btn_update" href="{{url_for('update_expense',id=expense.id,mode='update')}}">Update</a>
+                {% elif mode=="delete_confirm" %}
+                <a class="btn_delete" href="{{url_for('delete_confirm',id=expense.id,mode='delete_confirm')}}">Delete</a>
+                {% elif mode=="view" %}
+                <span class="muted">View only</span>
+                {% else %}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+</body>
+</html>
